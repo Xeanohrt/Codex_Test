@@ -11,8 +11,15 @@ import { ChapterService } from '../../../core/services/chapter.service';
 export class WikiComponent implements OnInit {
   chapters: Chapter[] = [];
   selectedFile: File | null = null;
+  editingChapterId: string | null = null;
 
   readonly chapterForm = this.fb.group({
+    title: ['', Validators.required],
+    summary: [''],
+    content: ['']
+  });
+
+  readonly editForm = this.fb.group({
     title: ['', Validators.required],
     summary: [''],
     content: ['']
@@ -46,6 +53,31 @@ export class WikiComponent implements OnInit {
       .subscribe(() => {
         this.chapterForm.reset();
         this.selectedFile = null;
+        this.loadChapters();
+      });
+  }
+
+  startEdit(chapter: Chapter): void {
+    this.editingChapterId = chapter._id;
+    this.editForm.setValue({
+      title: chapter.title,
+      summary: chapter.summary,
+      content: chapter.content
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingChapterId = null;
+  }
+
+  saveEdit(): void {
+    if (!this.editingChapterId || !this.editForm.valid) return;
+    const { title, summary, content } = this.editForm.getRawValue();
+
+    this.chapterService
+      .update(this.editingChapterId, { title: title ?? '', summary: summary ?? '', content: content ?? '' })
+      .subscribe(() => {
+        this.editingChapterId = null;
         this.loadChapters();
       });
   }

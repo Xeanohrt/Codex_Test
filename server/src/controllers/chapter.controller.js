@@ -35,6 +35,30 @@ export const getChapters = async (_req, res) => {
   }
 };
 
+export const updateChapter = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, summary, content } = req.body;
+    const updated = await Chapter.findByIdAndUpdate(
+      id,
+      {
+        ...(title !== undefined ? { title: title.trim() } : {}),
+        ...(summary !== undefined ? { summary: summary.trim() } : {}),
+        ...(content !== undefined ? { content: content.trim() } : {})
+      },
+      { new: true, runValidators: true }
+    ).populate('crossReferences.chapterId', 'title pdfOriginalName');
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Chapter not found.' });
+    }
+
+    return res.json(updated);
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to update chapter.', error: error.message });
+  }
+};
+
 export const addCrossReference = async (req, res) => {
   try {
     const { id } = req.params;

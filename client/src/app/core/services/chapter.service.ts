@@ -22,6 +22,10 @@ export class ChapterService {
     return this.http.post<Chapter>(this.baseUrl, formData);
   }
 
+  update(chapterId: string, payload: { title: string; summary: string; content: string }): Observable<Chapter> {
+    return this.http.put<Chapter>(`${this.baseUrl}/${chapterId}`, payload);
+  }
+
   addCrossReference(chapterId: string, reference: CrossReference): Observable<Chapter> {
     return this.http.patch<Chapter>(`${this.baseUrl}/${chapterId}/references`, reference);
   }

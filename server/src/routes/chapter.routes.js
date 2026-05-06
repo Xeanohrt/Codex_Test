@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
-import { createChapter, getChapters, addCrossReference } from '../controllers/chapter.controller.js';
+import { createChapter, getChapters, updateChapter, addCrossReference } from '../controllers/chapter.controller.js';
 
 const router = Router();
 const uploadsDir = 'uploads';
@@ -31,6 +31,7 @@ const upload = multer({
 
 router.get('/', getChapters);
 router.post('/', upload.single('pdf'), createChapter);
+router.put('/:id', updateChapter);
 router.patch('/:id/references', addCrossReference);
 
 export default router;

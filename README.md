@@ -45,3 +45,8 @@ This updated version is closer to a real wiki workflow by supporting:
 - Add auto-created reverse links (bidirectional cross-references).
 - Add full-text + embedding search over your chapter notes.
 - Add project/section hierarchy and citation graph views.
+
+
+## Editing in the frontend
+
+You can now edit existing chapter title, summary, and notes directly in the Angular UI using the **Edit Chapter** button.
