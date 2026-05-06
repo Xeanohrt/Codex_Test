@@ -1,52 +1,45 @@
-# PhD Knowledge Wiki (MEAN Stack)
+# PhD Knowledge Wiki (MEAN-style)
 
-Short answer: **the previous version was only a starter scaffold, not a full wiki yet**.
+This project lets you publish chapter-based PhD notes with uploaded PDFs and page-level cross-references.
 
-This updated version is closer to a real wiki workflow by supporting:
-
-- chapter uploads (PDF + notes),
-- persistent chapter records,
-- page-to-page chapter cross-references,
-- and rendering those references back in the UI.
-
-## Current capability checklist
-
-- ✅ Upload chapter PDFs and save chapter notes.
-- ✅ Store data in MongoDB through Express + Mongoose.
-- ✅ Add source-page → target-page cross-references between chapters.
-- ✅ Display cross-references for each chapter in Angular.
-- ⚠️ Not yet implemented: in-browser PDF page renderer, bidirectional backlink graph, semantic search, auth, and publication workflow.
-
-## Project structure
-
-- `server/`: Express + Mongoose API (`/api/chapters`) and PDF upload endpoint.
-- `client/`: Angular frontend with chapter upload, listing, and cross-reference linking UI.
-
-## Quick start
+## Local development
 
 1. Install dependencies:
    ```bash
    npm run install:all
    ```
-2. Set MongoDB connection string:
-   - Create `server/.env` with:
-   ```bash
-   MONGODB_URI=mongodb://localhost:27017/phd-wiki
-   PORT=5000
-   ```
-3. Run both frontend and backend:
+2. Start API + frontend:
    ```bash
    npm run dev
    ```
+3. API health check:
+   ```bash
+   http://localhost:5000/api/health
+   ```
 
-## Next improvements to reach “Karpathy-style LLM wiki”
+## Deploy online with Vercel (API)
 
-- Render PDF pages inline in Angular with page anchors.
-- Add auto-created reverse links (bidirectional cross-references).
-- Add full-text + embedding search over your chapter notes.
-- Add project/section hierarchy and citation graph views.
+This repository now includes a Vercel serverless entrypoint at `api/index.js` and `vercel.json` routing for `/api/*`.
 
+### Steps
 
-## Editing in the frontend
+1. Push this repo to GitHub.
+2. In Vercel, create a new project from this repository.
+3. Add environment variables:
+   - `MONGODB_URI` (required, use MongoDB Atlas for production)
+   - `UPLOADS_DIR` (optional; defaults to `/tmp/uploads` on Vercel)
+4. Deploy.
 
-You can now edit existing chapter title, summary, and notes directly in the Angular UI using the **Edit Chapter** button.
+After deploy, test:
+- `https://<your-vercel-domain>/api/health`
+
+## Important Vercel note about file uploads
+
+Vercel serverless functions have ephemeral filesystem storage. Uploaded PDFs written to `/tmp` are temporary and will not persist long-term. For production, move PDF storage to durable object storage (e.g., Vercel Blob, AWS S3, Cloudinary, or similar) and store only URLs in MongoDB.
+
+## Current features
+
+- Create chapters with PDF upload.
+- Edit chapter metadata/content.
+- Add page-to-page chapter cross-references.
+- Fetch references with populated target chapter metadata.

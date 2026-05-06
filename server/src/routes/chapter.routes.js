@@ -5,7 +5,7 @@ import path from 'path';
 import { createChapter, getChapters, updateChapter, addCrossReference } from '../controllers/chapter.controller.js';
 
 const router = Router();
-const uploadsDir = 'uploads';
+const uploadsDir = process.env.UPLOADS_DIR || (process.env.VERCEL ? '/tmp/uploads' : 'uploads');
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
