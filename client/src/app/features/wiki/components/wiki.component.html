@@ -1,0 +1,24 @@
+<section class="layout">
+  <h1>PhD Project + Literature Review Wiki</h1>
+
+  <form [formGroup]="chapterForm" (ngSubmit)="saveChapter()" class="chapter-form">
+    <input formControlName="title" placeholder="Chapter title" />
+    <textarea formControlName="summary" placeholder="One-paragraph summary"></textarea>
+    <textarea formControlName="content" placeholder="Write chapter notes and references page by page"></textarea>
+    <input type="file" accept="application/pdf" (change)="onFileSelected($event)" />
+    <button type="submit">Upload Chapter PDF + Notes</button>
+  </form>
+
+  <article *ngFor="let chapter of chapters" class="chapter-card">
+    <h2>{{ chapter.title }}</h2>
+    <p>{{ chapter.summary }}</p>
+    <details>
+      <summary>Read chapter notes</summary>
+      <pre>{{ chapter.content }}</pre>
+    </details>
+    <p>
+      PDF:
+      <a [href]="'http://localhost:5000/uploads/' + chapter.pdfFilename" target="_blank">{{ chapter.pdfOriginalName }}</a>
+    </p>
+  </article>
+</section>
