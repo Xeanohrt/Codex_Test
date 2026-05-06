@@ -1,5 +1,11 @@
+export interface ChapterRef {
+  _id: string;
+  title: string;
+  pdfOriginalName: string;
+}
+
 export interface CrossReference {
-  chapterId: string;
+  chapterId: string | ChapterRef;
   sourcePage: number;
   targetPage: number;
   note?: string;

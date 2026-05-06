@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Chapter } from '../models/chapter.model';
+import { Chapter, ChapterRef } from '../models/chapter.model';
 import { ChapterService } from '../../../core/services/chapter.service';
 
 @Component({
@@ -16,6 +16,14 @@ export class WikiComponent implements OnInit {
     title: ['', Validators.required],
     summary: [''],
     content: ['']
+  });
+
+  readonly referenceForm = this.fb.group({
+    sourceChapterId: ['', Validators.required],
+    targetChapterId: ['', Validators.required],
+    sourcePage: [1, Validators.required],
+    targetPage: [1, Validators.required],
+    note: ['']
   });
 
   constructor(private readonly fb: FormBuilder, private readonly chapterService: ChapterService) {}
@@ -40,6 +48,27 @@ export class WikiComponent implements OnInit {
         this.selectedFile = null;
         this.loadChapters();
       });
+  }
+
+  linkPages(): void {
+    if (!this.referenceForm.valid) return;
+    const values = this.referenceForm.getRawValue();
+
+    this.chapterService
+      .addCrossReference(values.sourceChapterId!, {
+        chapterId: values.targetChapterId!,
+        sourcePage: Number(values.sourcePage),
+        targetPage: Number(values.targetPage),
+        note: values.note ?? ''
+      })
+      .subscribe(() => {
+        this.referenceForm.reset({ sourcePage: 1, targetPage: 1, note: '' });
+        this.loadChapters();
+      });
+  }
+
+  asRef(value: string | ChapterRef): ChapterRef | null {
+    return typeof value === 'string' ? null : value;
   }
 
   private loadChapters(): void {

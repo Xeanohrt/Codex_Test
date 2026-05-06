@@ -2,11 +2,28 @@
   <h1>PhD Project + Literature Review Wiki</h1>
 
   <form [formGroup]="chapterForm" (ngSubmit)="saveChapter()" class="chapter-form">
+    <h2>Add Chapter</h2>
     <input formControlName="title" placeholder="Chapter title" />
     <textarea formControlName="summary" placeholder="One-paragraph summary"></textarea>
     <textarea formControlName="content" placeholder="Write chapter notes and references page by page"></textarea>
     <input type="file" accept="application/pdf" (change)="onFileSelected($event)" />
     <button type="submit">Upload Chapter PDF + Notes</button>
+  </form>
+
+  <form [formGroup]="referenceForm" (ngSubmit)="linkPages()" class="chapter-form">
+    <h2>Create Page Cross-Reference</h2>
+    <select formControlName="sourceChapterId">
+      <option value="">Source chapter</option>
+      <option *ngFor="let chapter of chapters" [value]="chapter._id">{{ chapter.title }}</option>
+    </select>
+    <input type="number" min="1" formControlName="sourcePage" placeholder="Source page" />
+    <select formControlName="targetChapterId">
+      <option value="">Target chapter</option>
+      <option *ngFor="let chapter of chapters" [value]="chapter._id">{{ chapter.title }}</option>
+    </select>
+    <input type="number" min="1" formControlName="targetPage" placeholder="Target page" />
+    <input formControlName="note" placeholder="Optional context note" />
+    <button type="submit">Link Pages</button>
   </form>
 
   <article *ngFor="let chapter of chapters" class="chapter-card">
@@ -20,5 +37,14 @@
       PDF:
       <a [href]="'http://localhost:5000/uploads/' + chapter.pdfFilename" target="_blank">{{ chapter.pdfOriginalName }}</a>
     </p>
+    <div *ngIf="chapter.crossReferences?.length">
+      <h3>Cross References</h3>
+      <ul>
+        <li *ngFor="let reference of chapter.crossReferences">
+          p{{ reference.sourcePage }} → {{ asRef(reference.chapterId)?.title || reference.chapterId }} p{{ reference.targetPage }}
+          <span *ngIf="reference.note"> — {{ reference.note }}</span>
+        </li>
+      </ul>
+    </div>
   </article>
 </section>

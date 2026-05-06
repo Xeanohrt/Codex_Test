@@ -1,18 +1,26 @@
 # PhD Knowledge Wiki (MEAN Stack)
 
-This starter project gives you a **MongoDB + Express + Angular + Node.js** architecture for building a public-facing literature review and PhD project wiki inspired by Karpathy-style knowledge systems.
+Short answer: **the previous version was only a starter scaffold, not a full wiki yet**.
 
-## What this build supports
+This updated version is closer to a real wiki workflow by supporting:
 
-- Upload chapter PDFs.
-- Write chapter-level notes and summaries.
-- Store and query chapter metadata in MongoDB.
-- Save page-to-page cross-reference objects between chapters.
+- chapter uploads (PDF + notes),
+- persistent chapter records,
+- page-to-page chapter cross-references,
+- and rendering those references back in the UI.
+
+## Current capability checklist
+
+- ✅ Upload chapter PDFs and save chapter notes.
+- ✅ Store data in MongoDB through Express + Mongoose.
+- ✅ Add source-page → target-page cross-references between chapters.
+- ✅ Display cross-references for each chapter in Angular.
+- ⚠️ Not yet implemented: in-browser PDF page renderer, bidirectional backlink graph, semantic search, auth, and publication workflow.
 
 ## Project structure
 
 - `server/`: Express + Mongoose API (`/api/chapters`) and PDF upload endpoint.
-- `client/`: Angular frontend with chapter upload and listing UI.
+- `client/`: Angular frontend with chapter upload, listing, and cross-reference linking UI.
 
 ## Quick start
 
@@ -31,9 +39,9 @@ This starter project gives you a **MongoDB + Express + Angular + Node.js** archi
    npm run dev
    ```
 
-## Next improvements
+## Next improvements to reach “Karpathy-style LLM wiki”
 
-- Add PDF page rendering in Angular via `pdf.js`.
-- Add in-text bidirectional links from page references.
-- Add auth for private drafting + public publishing toggle.
-- Add full-text search over chapter notes.
+- Render PDF pages inline in Angular with page anchors.
+- Add auto-created reverse links (bidirectional cross-references).
+- Add full-text + embedding search over your chapter notes.
+- Add project/section hierarchy and citation graph views.
